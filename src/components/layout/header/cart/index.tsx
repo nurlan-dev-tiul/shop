@@ -1,9 +1,7 @@
 import { useState, useRef } from 'react';
 import { CartItem } from './cart-item';
-import { useAppSelector } from '../../../../hooks/redux-hooks';
-import { selectCart } from '../../../../store/features/cart/cart-selectors';
-import { cart } from '../../../../data/cart.data';
 import { formatToPrice } from '../../../../utils/format-to-price';
+import { useCart } from '../../../../hooks/useCart';
 import {
     Drawer,
     DrawerBody,
@@ -21,16 +19,13 @@ export const Cart = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const btnRef = useRef<HTMLButtonElement>(null);
-    const { items } = useAppSelector(selectCart);
 
-    const total = items.reduce((acc, item) => {
-        return acc + item.product.price * item.quantity
-    }, 0)
+    const { items, total } = useCart();
 
     return (
         <div className={styles.wrapper}>
             <button className={styles.heading} onClick={() => setIsOpen(!isOpen)} ref={btnRef}>
-                <span className={styles.badge}>{cart.length}</span>
+                <span className={styles.badge}>{items.length}</span>
                 <span className={styles.basket_text}>Basket</span>
             </button>
             {isOpen && (

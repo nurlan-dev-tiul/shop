@@ -5,23 +5,24 @@ import { changeQuantity, removeFromCart } from '../../../../../store/features/ca
 import { ICartItem } from '../../../../../types/cart.interface';
 
 import styles from './count.module.scss';
-
+import { useCart } from '../../../../../hooks/useCart';
 
 export const CartCountBtn = ({item}: {item: ICartItem}) => {
 
     const dispatch = useAppDispatch();
+    const { items } = useCart();
 
     const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumberInput({
         step: 1,
         defaultValue: 1,
-        min: 1,
-        max: 20,
     });
 
     const inc = getIncrementButtonProps();
     const dec = getDecrementButtonProps();
     const input = getInputProps();
+
+    const qty = items.find(cartItem => cartItem.id === item.id)?.quantity;
 
     return (
         <HStack maxW='320px'>
@@ -29,6 +30,7 @@ export const CartCountBtn = ({item}: {item: ICartItem}) => {
                 {...dec} 
                 size='xs'
                 onClick={() => dispatch(changeQuantity({id: item.id, type: 'minus'}))}
+                disabled={qty === 1}
             >
                 <MinusIcon />
             </Button>
@@ -39,7 +41,10 @@ export const CartCountBtn = ({item}: {item: ICartItem}) => {
                 textAlign='center'
                 borderRadius='6px'
                 focusBorderColor='green.100'
+                cursor='default'
                 width={30}
+                value={qty}
+                readOnly
             />
             <Button 
                 {...inc} 
