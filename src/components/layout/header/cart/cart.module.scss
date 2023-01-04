@@ -1,0 +1,40 @@
+@import '../../../../styles/mixins.scss';
+
+.wrapper {
+    position: relative;
+    .basket_text {
+        @include text-letter-upercase(var(--black))
+    }
+
+    .heading {
+        display: flex;
+        align-items: center;
+    }
+    
+    .badge {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--red);
+        color: white;
+        font-size: 12px;
+        border-radius: 50%;
+        padding: 4px;
+        font-weight: 500;
+        margin-right: 5px;
+    }
+}
+
+.total {
+    > span:first-child {
+        color: var(--gray);
+        margin-right: 10px;
+    }
+
+    > span:last-child {
+        color: var(--black);
+        font-weight: 600;
+    }
+}

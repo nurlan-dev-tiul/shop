@@ -1,0 +1,26 @@
+.layout {
+    position: relative;
+    padding: 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -70%;
+        left: 50%;
+        transform: translate(-50%,0);
+        z-index: 1;
+        background-color: var(--light-green);
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+    }
+
+    .content {
+        position: relative;
+        margin-top: 20px;
+        z-index: 20;
+        text-align: center;
+    }
+}
