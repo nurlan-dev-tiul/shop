@@ -9,20 +9,181 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+// Для Статуса для заказа
+enum OrderStatus {
+  PENDING
+  SUCCEEDED
+  CANCELLED
+}
+
+// Для Роли пользователя
+enum UserRole {
+  USER
+  ADMIN
+}
+
+
 // Модели
 model User {
   id Int @id @default(autoincrement())
+
+  // Инфа о пользователе
   fullName String
-  email String 
+  email String @unique
   password String
+  role UserRole  @default(USER)
+
+  // Какая соц сеть привязана к пользователю то есть через что он зарегался 
+  provider String?
+  providerId String?
+
+  // Связь с корзиной, c заказами, с продуктом самой корзины
+  // cartItems CartItem[]
+  cart Cart?
+  orders Order[]
+  verificationCode VerificationCode?
+
+  // Дата регистрации пользователя
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String @unique
+
+  //Связи
+  products Product[]
 }
 
 model Product {
   id Int @id @default(autoincrement())
   name String
   imageUrl String
+
+  // Связь с категорией
+  // Сначала fields смотрит какое id сохранено в categoryId Int например id: 4
+  // потом уже references ищет такое id в модели категории
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId Int // Здесь будет храниться id категории к которому пренадлежит продукт
+
+  // Связь с комплектующими Components
+  components Components[]
+
+  // Связь с ProductItem
+  items ProductItem[]
+
+  // Дата создания продукта
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
+
+// Размеры, вариации
+model ProductItem {
+  id Int @id @default(autoincrement())
+  price Int
+  size Int? // ? означает что это поле может быть пустым size может и не быть 
+  productType Int?
+
+  // Связь с продутом
+  product Product @relation(fields: [productId], references: [id])
+  productId Int
+
+  cartItems CartItem[]
+}
+
+// Запчасти комплектующие
+model Components {
+  id Int @id @default(autoincrement())
+  name String
+  price Int
+  image String
+
+  // Связи
+  products Product[]
+  cartItems CartItem[]
+
+  // Дата создания продукта
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}
+
+// Корзина
+model Cart {
+  id Int @id @default(autoincrement())
+  
+  // Связь с пользователем
+  user User? @relation(fields: [userId], references: [id])
+  userId Int? @unique
+  token String // Для незарегистрированного пользователя будет токен в корзине
+
+  cartItems CartItem[]
+
+  // Общая стоимость
+  totalAmount Int @default(0) // По умолчанию общая стоимость в корзине 0
+
+  // Дата создания продукта
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}
+
+// Продукты которые будут храниться в корзине
+model CartItem {
+  id Int @id @default(autoincrement())
+
+  productItem ProductItem @relation(fields: [productItemId], references: [id])
+  productItemId Int
+
+  cart Cart @relation(fields: [cartId], references: [id])
+  cartId Int
+
+  quantity Int // Количество элементов в корзине
+
+  components Components[]
+
+  // Дата создания продукта
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}
+
+// Заказы, тут мы храним какому пользователю пренадлежит какой заказ
+model Order {
+  id Int @id @default(autoincrement())
+
+  user User? @relation(fields: [userId], references: [id])
+  userId Int?
+  token String
+
+  totalAmount Int // Стоимость заказа
+  status OrderStatus
+  paymentId String? // Id оплаты который создаться в сервисе оплаты типа мбанк
+  items Json // Список товаров из корзины
+
+  // Информация человека который получит заказ
+  fullName String
+  address  String
+  email    String
+  phone    String
+  comment  String?
+
+  // Дата создания продукта
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}
+
+// Код подверждения с почты
+model VerificationCode {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  code String
+
+  expiresAt DateTime @default(now()) // Через какое время умрет код
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, code])
+}
+
