@@ -44,7 +44,6 @@ const cats = [
 
 export const Categories = ({className}: CategoriesProps) => {
   const {activeId} = useCategoryStore((state) => state);
-  console.log(activeId);
   
   return (
     <div className={cn('inline-flex gap-1 bg-gray-50 p-2 rounded-2xl', className)}>

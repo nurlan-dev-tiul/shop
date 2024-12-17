@@ -1,15 +1,22 @@
+"use client";
+
 import { cn } from '@/lib/utils';
 import { Title } from '../title';
 import { FilterCheckbox } from './filter-checkbox';
 import { Input } from '../../ui/input';
 import { RangeSlider } from './range-slider';
 import { FilterCheckboxGroup } from './filter-checkbox-group';
+import { useFilterParts } from '@/hooks/useFilterParts';
 
 interface FiltersProps {
   className?: string;
 }
 
 export const Filters = ({className}: FiltersProps) => {
+
+  const { partsComponents, loading, onAddChecboxId, selectedIds } = useFilterParts();
+  const items = partsComponents.map(item => ({text: item.name, value: String(item.id)}))
+
   return (
     <div className={cn("", className)}>
       <div className="flex flex-col gap-4">
@@ -27,61 +34,15 @@ export const Filters = ({className}: FiltersProps) => {
         <RangeSlider min={0} max={30000} step={10} value={[0, 15000]} />
       </div>
       <FilterCheckboxGroup 
-        title="Ингридиенты"
+        title="Бренды"
+        name="brands"
         className="mt-5"
-        limit={6}
-        defaultItems={[
-          {
-            text: "Молоко",
-            value: "1"
-          },
-          {
-            text: "Молоко",
-            value: "2"
-          },
-          {
-            text: "Молоко",
-            value: "3"
-          },
-          {
-            text: "Молоко",
-            value: "4"
-          },
-          {
-            text: "Молоко",
-            value: "5"
-          },
-        ]}
-        items={[
-          {
-            text: "Сырный соус",
-            value: "1"
-          },
-          {
-            text: "Голова Жука",
-            value: "2"
-          },
-          {
-            text: "Пыльное мясо",
-            value: "3"
-          },
-          {
-            text: "Сервый червь",
-            value: "4"
-          },
-          {
-            text: "Сервый червь",
-            value: "4"
-          },
-          {
-            text: "Сервый червь",
-            value: "4"
-          },
-          {
-            text: "Сервый червь",
-            value: "4"
-          }
-        ]}
+        limit={3}
+        loading={loading}
+        defaultItems={items.slice(0, 3)} // До 6 элементов
+        items={items} // При нажатии на кнопку показать - все элементы
+        onClickChecbox={onAddChecboxId} // Добавляем id в Set из кликнутого чекбокса    
+        selectedIds={selectedIds}
       />
     </div>
   )

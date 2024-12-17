@@ -4,41 +4,42 @@ import { prisma } from "./prisma.client";
 // Данные компонентов
 const components = [
   {
-    name: 'Вело шлем',
+    name: 'Kawasaki',
     price: 2000,
     image:
       'https://sportexpert.kg/wp-content/uploads/2023/06/Cairn-%D0%B2%D0%B5%D0%BB%D0%BE%D1%88%D0%BB%D0%B5%D0%BC-Prism-XTR-II-forest-bright-red-58-61.jpg',
   },
   {
-    name: 'Перчатки',
+    name: 'Honda',
     price: 700,
     image:
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu4DeuuTOkij_y0fUvcmzzwHimsrjkjkvBRA&s',
   },
   {
-    name: 'Очки',
+    name: 'Aprilia',
     price: 500,
     image:
       'https://img.joomcdn.net/4498771a1dfddac37b4ea74c345ac891c5dcc092_original.jpeg',
   },
   {
-    name: 'Мотошлем',
+    name: 'BMW',
     price: 800,
     image:
       'https://motodom.ua/image/cache/catalog/Product_Pictures/Helmets/Icon/Airflite/Rubatone_Black_matt/icon_airflite_rubatone_helmet_black_750x750-500x500.jpg',
   },
   {
-    name: 'Мотоэкиперовка',
+    name: 'Yamaha',
     price: 500,
     image:
       'https://images.satu.kz/211384737_w640_h320_moto-ekipirovka-uchoose-cherepaha.jpg',
   },
   {
-    name: 'Мотодержатель для телефона',
+    name: 'Suzuki',
     price: 1500,
     image:
       'https://img.joomcdn.net/f2f5deb400ac5aa45f5695afe1a740a16822e804_original.jpeg',
   },
+  
 ].map((obj, index) => ({id: index + 1, ...obj}));
 
 // Функция для генерации данных на базу данных

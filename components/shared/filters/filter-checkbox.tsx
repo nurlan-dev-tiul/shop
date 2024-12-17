@@ -26,6 +26,7 @@ export const FilterCheckbox: React.FC<FilterChecboxProps> = ({
         value={value}
         className="rounded-[4px] w-5 h-5"
         id={`checkbox-${name}-${String(value)}`}
+        name={name}
       />
       <label
         htmlFor={`checkbox-${name}-${String(value)}`}

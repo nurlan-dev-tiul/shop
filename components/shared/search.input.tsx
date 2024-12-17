@@ -24,11 +24,13 @@ export const SearchInput = ({className}: Props) => {
 
   // Хук из react-use, здесь она работает как useEffect
   // Мы получаем данные, когда searchQuery изменяется
-  useDebounce(() => {
-    Api.products.search(searchQuery)
-      .then(items => {
-        setProducts(items)
-      })
+  useDebounce(async () => {
+    try {
+      const response = await Api.products.search(searchQuery);
+      setProducts(response);
+    } catch (error) {
+      console.log(error)
+    }
   }, 250, [searchQuery]);
 
   // При клике на найденный товар мы должны скрыть выпадающий список и очистить
